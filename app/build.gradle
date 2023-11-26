@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
-    id 'com.chaquo.python'
+//    id 'com.chaquo.python'
 }
 
 android {
@@ -17,20 +17,20 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-        }
-
-        python {
-            version "3.8"
-            buildPython "C:\\Users\\ethyn\\anaconda3\\envs\\py38\\python.exe"
-            buildPython "C:\\Users\\ethyn\\anaconda3\\envs\\py38\\python.exe", "-3.8"
-        }
-        sourceSets {
-            main {
-                python.srcDir "src/main/python"
-            }
-        }
+//        ndk {
+//            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+//        }
+//
+//        python {
+//            version "3.8"
+//            buildPython "C:\\Users\\ethyn\\anaconda3\\envs\\py38\\python.exe"
+//            buildPython "C:\\Users\\ethyn\\anaconda3\\envs\\py38\\python.exe", "-3.8"
+//        }
+//        sourceSets {
+//            main {
+//                python.srcDir "src/main/python"
+//            }
+//        }
     }
 
     buildTypes {

@@ -17,43 +17,49 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Critter"
+        android:theme="@style/Theme.CritterCalls"
         tools:targetApi="31">
         <activity
             android:name="com.example.crittercalls.StatsActivity"
+            android:theme="@style/Theme.CritterCalls"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.crittercalls.InfoModuleActivity"
+            android:theme="@style/Theme.CritterCalls"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.crittercalls.AudioHelperActivity"
+            android:theme="@style/Theme.CritterCalls"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.crittercalls.ForgotPasswordActivity"
             android:exported="false"
+            android:theme="@style/Theme.CritterCalls"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.crittercalls.EditAccountActivity"
             android:exported="false"
             android:label="@string/title_activity_edit_account"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Critter" />
+            android:theme="@style/Theme.CritterCalls" />
         <activity
             android:name="com.example.crittercalls.ProfileActivity"
             android:exported="false"
+            android:theme="@style/Theme.CritterCalls"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.crittercalls.RegisterActivity"
             android:exported="false"
+            android:theme="@style/Theme.CritterCalls"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.crittercalls.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Critter">
+            android:theme="@style/Theme.CritterCalls">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -63,6 +69,7 @@
         <activity
             android:name="com.example.crittercalls.MainActivity"
             android:exported="false"
+            android:theme="@style/Theme.CritterCalls"
             android:screenOrientation="portrait" />
     </application>
 

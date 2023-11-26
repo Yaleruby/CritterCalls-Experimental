@@ -17,9 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.chaquo.python.PyObject;
-import com.chaquo.python.Python;
-import com.chaquo.python.android.AndroidPlatform;
+//import com.chaquo.python.PyObject;
+//import com.chaquo.python.Python;
+//import com.chaquo.python.android.AndroidPlatform;
 
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.audio.TensorAudio;
@@ -45,18 +45,11 @@ public class AudioHelperActivity extends ClassificationActivity {
     private static final float MINIMUM_DISPLAY_THRESHOLD = 0.3f;
     private AudioRecord audioRecord;
     private TensorAudio audioTensor;
-    private String[] animals = {"dog", "cat", "rooster", "pig", "cow", "frog", "hen", "insects", "sheep", "crow", "chirping_birds"};
+    private String[] animals = {"Dog", "Cat", "Rooster", "Pig", "Cow", "Frog", "Hen", "Insects", "Sheep", "Crow", "Bird"};
     private String wavFilePath;  // Path to the WAV file
-    private int bufferSize;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        HandlerThread handlerThread = new HandlerThread("backgroundThread");
-//        handlerThread.start();
-//        mHandler = HandlerCompat.createAsync(handlerThread.getLooper());
 
 //        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 //            requestPermissions(permissions, REQUEST_RECORD_AUDIO_PERMISSION);
@@ -71,52 +64,16 @@ public class AudioHelperActivity extends ClassificationActivity {
 
         audioTensor = audioClassifier.createInputTensorAudio();
 
-        if (!Python.isStarted()) {
-            Python.start(new AndroidPlatform(this));
-        }
-
-        Python py = Python.getInstance();
-        PyObject pyObject = py.getModule("hello");
-
-        PyObject obj = pyObject.callAttr("main");
-
-        outputTextView.setText(obj.toString());
-
-
-//        try {
-//            AnimalSoundModel model = AnimalSoundModel.newInstance(context);
-//
-//            // Creates inputs for reference.
-//            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1}, DataType.FLOAT32);
-//            inputFeature0.loadBuffer(byteBuffer);
-//
-//            // Runs model inference and gets result.
-//            AnimalSoundModel.Outputs outputs = model.process(inputFeature0);
-//            TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-//
-//            // Releases model resources if no longer used.
-//            model.close();
-//        } catch (IOException e) {
-//            // TODO Handle the exception
+//        if (!Python.isStarted()) {
+//            Python.start(new AndroidPlatform(this));
 //        }
 //
-//        try {
-//            YamnetClassification model = YamnetClassification.newInstance(context);
+//        Python py = Python.getInstance();
+//        PyObject pyObject = py.getModule("hello");
 //
-//            // Creates inputs for reference.
-//            TensorBuffer audioClip = TensorBuffer.createFixedSize(new int[]{15600}, DataType.FLOAT32);
-//            audioClip.loadBuffer(byteBuffer);
+//        PyObject obj = pyObject.callAttr("main");
 //
-//            // Runs model inference and gets result.
-//            YamnetClassification.Outputs outputs = model.process(audioClip);
-//            TensorBuffer scores = outputs.getScoresAsTensorBuffer();
-//
-//            // Releases model resources if no longer used.
-//            model.close();
-//        } catch (IOException e) {
-//            // TODO Handle the exception
-//        }
-
+//        outputTextView.setText(obj.toString());
     }
     @Override
     public void onStartRecording(View view) {
@@ -229,19 +186,6 @@ public class AudioHelperActivity extends ClassificationActivity {
         classifyAudio();
 
         audioRecord.release();
-
-        // Set the path for the WAV file
-        wavFilePath = Objects.requireNonNull(getExternalFilesDir(null)).getAbsolutePath() + "/recorded_audio.wav";
-
-
-
-//        mHandler.removeCallbacksAndMessages(null);
-//        mAudioRecord.stop();
-//        mAudioRecord = null;
-//        mAudioClassifier = null;
-
-//        timerTask.cancel();
-//        audioRecord.stop();
     }
 
     private void classifyAudio() {
@@ -301,133 +245,6 @@ public class AudioHelperActivity extends ClassificationActivity {
 //        }
     }
 
-    private void saveAudioToWav() {
-        try {
-            // Create a File object for the WAV file
-            File wavFile = new File(wavFilePath);
-
-            // Create a FileOutputStream to write the audio data to the file
-            FileOutputStream fos = new FileOutputStream(wavFile);
-
-            // Get the audio data from the AudioRecord
-            byte[] audioData = new byte[bufferSize];  // Adjust bufferSize to your needs
-            audioRecord.read(audioData, 0, bufferSize);
-
-            // Write the WAV header
-            WaveHeader waveHeader = new WaveHeader(audioData.length);
-            fos.write(waveHeader.getHeader(), 0, WaveHeader.HEADER_SIZE);
-
-            // Write the audio data to the file
-            fos.write(audioData, 0, audioData.length);
-
-            // Close the FileOutputStream
-            fos.close();
-
-            showMessage("Audio saved to: " + wavFile.getAbsolutePath());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showMessage("Error saving audio to WAV file");
-        }
-    }
-
-    // WaveHeader class to create a WAV file header
-    class WaveHeader {
-        static final int HEADER_SIZE = 44;
-        private int totalDataLen;
-        private int channels;
-        private int sampleRate;
-        private int byteRate;
-        private int blockAlign;
-        private int bitsPerSample;
-
-        public WaveHeader(int totalAudioLen) {
-            this.totalDataLen = totalAudioLen + HEADER_SIZE - 8;
-            this.channels = 1;  // Mono audio
-            this.sampleRate = 44100;  // Adjust sample rate to your needs
-            this.bitsPerSample = 16;  // Adjust bits per sample to your needs
-
-            this.byteRate = this.sampleRate * this.channels * this.bitsPerSample / 8;
-            this.blockAlign = this.channels * this.bitsPerSample / 8;
-        }
-
-        public byte[] getHeader() {
-            byte[] header = new byte[HEADER_SIZE];
-
-            // ChunkID (RIFF)
-            header[0] = 'R';
-            header[1] = 'I';
-            header[2] = 'F';
-            header[3] = 'F';
-
-            // ChunkSize
-            header[4] = (byte) (totalDataLen & 0xff);
-            header[5] = (byte) ((totalDataLen >> 8) & 0xff);
-            header[6] = (byte) ((totalDataLen >> 16) & 0xff);
-            header[7] = (byte) ((totalDataLen >> 24) & 0xff);
-
-            // Format (WAVE)
-            header[8] = 'W';
-            header[9] = 'A';
-            header[10] = 'V';
-            header[11] = 'E';
-
-            // Subchunk1ID (fmt)
-            header[12] = 'f';
-            header[13] = 'm';
-            header[14] = 't';
-            header[15] = ' ';
-
-            // Subchunk1Size
-            header[16] = 16;  // Subchunk1Size is always 16 for PCM
-            header[17] = 0;
-            header[18] = 0;
-            header[19] = 0;
-
-            // AudioFormat (PCM)
-            header[20] = 1;
-            header[21] = 0;
-
-            // NumChannels
-            header[22] = (byte) channels;
-            header[23] = 0;
-
-            // SampleRate
-            header[24] = (byte) (sampleRate & 0xff);
-            header[25] = (byte) ((sampleRate >> 8) & 0xff);
-            header[26] = (byte) ((sampleRate >> 16) & 0xff);
-            header[27] = (byte) ((sampleRate >> 24) & 0xff);
-
-            // ByteRate
-            header[28] = (byte) (byteRate & 0xff);
-            header[29] = (byte) ((byteRate >> 8) & 0xff);
-            header[30] = (byte) ((byteRate >> 16) & 0xff);
-            header[31] = (byte) ((byteRate >> 24) & 0xff);
-
-            // BlockAlign
-            header[32] = (byte) blockAlign;
-            header[33] = 0;
-
-            // BitsPerSample
-            header[34] = (byte) bitsPerSample;
-            header[35] = 0;
-
-            // Subchunk2ID (data)
-            header[36] = 'd';
-            header[37] = 'a';
-            header[38] = 't';
-            header[39] = 'a';
-
-            // Subchunk2Size
-            header[40] = (byte) (totalDataLen - HEADER_SIZE + 8);
-            header[41] = 0;
-            header[42] = 0;
-            header[43] = 0;
-
-            return header;
-        }
-    }
-
     private boolean checkAudioPermission() {
         // Check if the permission has been granted
         return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
@@ -438,8 +255,6 @@ public class AudioHelperActivity extends ClassificationActivity {
         // Request audio recording permission
         requestPermissions(permissions, REQUEST_RECORD_AUDIO_PERMISSION);
     }
-
-
 
     // Handle the result of the permission request
     @Override
